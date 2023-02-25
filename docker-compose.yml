@@ -5,9 +5,4 @@ services:
     stdin_open: true
     network_mode: host
     restart: unless-stopped
-    volumes:
-      - nuveke-builder:/app
 
-volumes:
-  nuveke-builder:
-    external: true
