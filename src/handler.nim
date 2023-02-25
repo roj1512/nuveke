@@ -17,10 +17,14 @@ proc getHandler*(config: Table[string, string]): OnRequest =
                 let repository = payload["repository"]["full_name"].getStr()
                 if config.hasKey(repository):
                     let dir = config[repository]
-                    discard execCmdEx("git pull", workingDir = dir)
-                    discard execCmdEx("docker compose stop", workingDir = dir)
-                    discard execCmdEx("docker compose build", workingDir = dir)
-                    discard execCmdEx("docker compose up -d", workingDir = dir)
+                    var _, code =  execCmdEx("git pull", workingDir = dir)
+                    echo code
+                    var _, c = execCmdEx("docker compose stop", workingDir = dir)
+                    echo c
+                    var _, k = execCmdEx("docker compose build", workingDir = dir)
+                    echo k
+                    var _, l = execCmdEx("docker compose up -d", workingDir = dir)
+                    echo l
             except:
                 echo getCurrentExceptionMsg()
                 req.send(Http500)
