@@ -9,7 +9,9 @@ docker compose cp builder:/app/nuveke nuveke
 docker compose stop
 mv nuveke /usr/bin
 chmod +x /usr/bin/nuveke
-echo "{}" > /etc/nuveke.json
+if [! -f /etc/nuveke.json]; then
+    echo "{}" > /etc/nuveke.json
+fi
 echo "[Service]\nExecStart=/usr/bin/nuveke\n\n[Install]\nWantedBy=multi-user.target\n" > /etc/systemd/system/nuveke.service
 systemctl daemon-reload
 systemctl enable --now nuveke
