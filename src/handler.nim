@@ -13,9 +13,12 @@ proc getHandler*(config: Table[string, string]): OnRequest =
         if req.body.isSome:
             try:
                 let body = req.body.get()
+                echo body
                 let payload = parseJson(body)
                 let repository = payload["repository"]["full_name"].getStr()
+                echo "repo", repository
                 if config.hasKey(repository):
+                    echo "has repo"
                     let dir = config[repository]
                     var _, code =  execCmdEx("git pull", workingDir = dir)
                     echo code
