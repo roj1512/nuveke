@@ -11,15 +11,18 @@ proc getHandler*(config: Table[string, string]): OnRequest =
         if not m.isSome or m.get() != HttpPost:
             req.send(Http405)
         if req.body.isSome:
-            let body = req.body.get()
-            let payload = parseJson(body)
-            let repository = payload["repository"]["full_name"].getStr()
-            if config.hasKey(repository):
-                let dir = config[repository]
-                discard execCmdEx("git pull", workingDir = dir)
-                discard execCmdEx("docker compose stop", workingDir = dir)
-                discard execCmdEx("docker compose build", workingDir = dir)
-                discard execCmdEx("docker compose up -d", workingDir = dir)
+            try:
+                let body = req.body.get()
+                let payload = parseJson(body)
+                let repository = payload["repository"]["full_name"].getStr()
+                if config.hasKey(repository):
+                    let dir = config[repository]
+                    discard execCmdEx("git pull", workingDir = dir)
+                    discard execCmdEx("docker compose stop", workingDir = dir)
+                    discard execCmdEx("docker compose build", workingDir = dir)
+                    discard execCmdEx("docker compose up -d", workingDir = dir)
+            except:
+                req.send(Http500)
         else:
             req.send(Http400)
         req.send(Http200)
