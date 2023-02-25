@@ -4,5 +4,4 @@ services:
     tty: true
     stdin_open: true
     network_mode: host
-    restart: unless-stopped
 
