@@ -22,6 +22,7 @@ proc getHandler*(config: Table[string, string]): OnRequest =
                     discard execCmdEx("docker compose build", workingDir = dir)
                     discard execCmdEx("docker compose up -d", workingDir = dir)
             except:
+                echo getCurrentExceptionMsg()
                 req.send(Http500)
         else:
             req.send(Http400)
